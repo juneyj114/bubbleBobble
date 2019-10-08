@@ -2,9 +2,13 @@ package bubbleBobble;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class Stage1 extends JFrame {
 
@@ -13,7 +17,8 @@ public class Stage1 extends JFrame {
 
 	// 배경그리기
 	public void draw_bg() {
-
+		JLabel jl = new JLabel(new ImageIcon("image/bg.png"));
+		setContentPane(jl);
 	}
 
 	// 버블그리기
@@ -89,14 +94,24 @@ public class Stage1 extends JFrame {
 		for (int i = 0; i < zhen.length; i++) { // 몹 생성
 			zhen[i] = new Zhen();
 		}
+		draw_bg();
 	}
 
 	// 생성자
 	public Stage1() {
-		setSize(1000, 600);
+		setSize(1000, 639);
 		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		init();
+		
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println(e.getX());
+				System.out.println(e.getY());
+			}
+			
+		});
 
 		// 플레이어 그리기
 		draw_player();

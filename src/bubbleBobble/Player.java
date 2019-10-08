@@ -7,14 +7,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class Player extends JLabel implements Runnable {
-	private int x = 0; // 시작위치 x좌표
-	private int y = 500; // 시작위치 y좌표
+	private int x = 55; // 시작위치 x좌표
+	private int y = 535; // 시작위치 y좌표
 
 	private int direct = 2; // 1은 왼쪽, 2는 오른쪽을 보고 있는 상태
 
 	Boolean left = false;
 	Boolean right = false;
 	Boolean up = false;
+	Boolean down = false;
 
 	ImageIcon playerR; // 오른쪽 이미지
 	ImageIcon playerL; // 왼쪽 이미지
@@ -27,6 +28,31 @@ public class Player extends JLabel implements Runnable {
 		this.setLocation(x, y);
 		move();
 
+	}
+	
+	public void stopCheck(Player player) {
+		if(player.getY() >= 535) {
+			player.down = false;
+			if(player.getY() >= 535) {
+			player.setY(535);
+			repaint();
+			}
+		}
+		if(player.getX() <= 65) {
+			player.left = false;
+			if(player.getX() <= 65) {
+				player.setX(65);
+				repaint();
+			}
+			
+		}
+		if(player.getX() >= 885) {
+			player.right = false;
+			if(player.getX() >= 885) {
+				player.setX(885);
+				repaint();
+			}
+		}
 	}
 
 	public void move() {
@@ -68,23 +94,24 @@ public class Player extends JLabel implements Runnable {
 			while (this.left) {
 				try {
 					if (this.left && this.up) {
-						for (int i = 0; i < 100; i++) {
+						for (int i = 0; i < 40; i++) {
 							this.setX(this.getX() - 1);
-							this.setY(this.getY() - 1);
+							this.setY(this.getY() - 3);
 							this.setLocation(this.getX(), this.getY());
 							repaint();
-							Thread.sleep(5);
+							Thread.sleep(15);
 						}
 						
-						for (int i = 0; i < 100; i++) {
+						for (int i = 0; i < 40; i++) {
 							this.setX(this.getX() - 1);
-							this.setY(this.getY() + 1);
+							this.setY(this.getY() + 3);
 							this.setLocation(this.getX(), this.getY());
 							repaint();
-							Thread.sleep(5);
+							Thread.sleep(15);
 						}
 
 					}
+					stopCheck(this);
 					this.setIcon(this.playerL);
 					this.setX(this.getX() - 1);
 					this.setLocation(this.getX(), this.getY());
@@ -99,23 +126,24 @@ public class Player extends JLabel implements Runnable {
 			while (this.right) {
 				try {
 					if (this.right && this.up) {
-						for (int i = 0; i < 100; i++) {
+						for (int i = 0; i < 40; i++) {
 							this.setX(this.getX() + 1);
-							this.setY(this.getY() - 1);
+							this.setY(this.getY() - 3);
 							this.setLocation(this.getX(), this.getY());
 							repaint();
-							Thread.sleep(5);
+							Thread.sleep(15);
 						}
 						
-						for (int i = 0; i < 100; i++) {
+						for (int i = 0; i < 40; i++) {
 							this.setX(this.getX() + 1);
-							this.setY(this.getY() + 1);
+							this.setY(this.getY() + 3);
 							this.setLocation(this.getX(), this.getY());
 							repaint();
-							Thread.sleep(5);
+							Thread.sleep(15);
 						}
 						
 					}
+					stopCheck(this);
 					this.setIcon(this.playerR);
 					this.setX(this.getX() + 1);
 					this.setLocation(this.getX(), this.getY());
@@ -127,28 +155,60 @@ public class Player extends JLabel implements Runnable {
 			}
 
 			while (this.up) {
-				for (int i = 0; i < 100; i++) {
+				for (int i = 0; i < 130; i++) {
 					try {
 						this.setY(this.getY() - 1);
 						this.setLocation(this.getX(), this.getY());
 						repaint();
 						Thread.sleep(5);
+						this.down = true;
 					} catch (InterruptedException e1) {
 						e1.printStackTrace();
 					}
 				}
-
 				// 상승 끝 하강 시작
-				for (int i = 0; i < 100; i++) {
+			while (this.down) {			
+				while(this.down && this.left) {
+						try {
+							stopCheck(this);
+							this.setIcon(this.playerL);
+							this.setX(this.getX() - 1);
+							this.setY(this.getY() + 3);
+							this.setLocation(this.getX(), this.getY());
+							repaint();
+							Thread.sleep(15);
+						} catch (Exception e) {
+							e.printStackTrace();
+					}
+				}
+				while(this.down && this.right) {
 					try {
-						this.setY(this.getY() + 1);
+						stopCheck(this);
+						this.setIcon(this.playerR);
+						this.setX(this.getX() + 1);
+						this.setY(this.getY() + 3);
 						this.setLocation(this.getX(), this.getY());
 						repaint();
-						Thread.sleep(5);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
+						Thread.sleep(15);
+					} catch (Exception e) {
+						e.printStackTrace();
 				}
+			}
+				try {
+					stopCheck(this);
+					this.setY(this.getY() + 1);
+					this.setLocation(this.getX(), this.getY());
+					repaint();
+					Thread.sleep(5);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				
+				
+				
+			}
+				
+				
 			}
 			try {
 				Thread.sleep(20);
