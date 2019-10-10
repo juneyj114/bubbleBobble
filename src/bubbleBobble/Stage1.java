@@ -13,8 +13,9 @@ import javax.swing.JLabel;
 public class Stage1 extends JFrame {
 
 	Player player;
-	Zhen[] zhen = new Zhen[3]; // 스테이지 1에는 3마리
-
+	Zhen[] zhen; // 스테이지 1에는 3마리
+	XyCal cal;
+	Thread wall;
 	// 배경그리기
 	public void draw_bg() {
 		JLabel jl = new JLabel(new ImageIcon("image/bg.png"));
@@ -30,6 +31,7 @@ public class Stage1 extends JFrame {
 				try {
 					add(bubble);
 					for (int i = 0; i < 100; i++) {
+						cal.bubbleNZhen(bubble);
 						bubble.setLocation(bubble.getX(), bubble.getY());
 						bubble.setX(bubble.getX() + 3);
 						Thread.sleep(16);
@@ -78,9 +80,10 @@ public class Stage1 extends JFrame {
 
 	// 몹 그리기
 	public void draw_zhen() {
-		for (Zhen z : zhen) {
-			add(z);
-		}
+//		for (Zhen z : zhen) {
+//			add(z);
+//		}
+		add(zhen[0]);
 	}
 
 	// 플레이어 그리기
@@ -91,10 +94,23 @@ public class Stage1 extends JFrame {
 	// 초기화
 	public void init() {
 		player = new Player(); // 플레이어 생성
+		
+		cal = new XyCal(zhen, player);
+		zhen = new Zhen[3];
 		for (int i = 0; i < zhen.length; i++) { // 몹 생성
-			zhen[i] = new Zhen();
+			zhen[i] = new Zhen(this);
 		}
-		draw_bg();
+		wall = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					cal.PwallCheck();
+				}				
+			}
+		});
+		System.out.println("55");
+		wall.start();
+		
 	}
 
 	// 생성자
@@ -103,7 +119,6 @@ public class Stage1 extends JFrame {
 		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		init();
-		
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -112,10 +127,13 @@ public class Stage1 extends JFrame {
 			}
 			
 		});
-
+		System.out.println("3");
+		draw_bg();
 		// 플레이어 그리기
 		draw_player();
-
+		draw_zhen();
+		
+		System.out.println("4");
 		// 키 리스너
 		addKeyListener(new KeyAdapter() {
 
