@@ -13,6 +13,8 @@ public class Zhen extends JLabel implements Runnable {
 	Boolean right = false;
 	Boolean down = false;
 	Boolean jump = false;
+	
+	Boolean isBubbed = false;
 
 	Stage1 stage1;
 	Random random;
@@ -25,17 +27,16 @@ public class Zhen extends JLabel implements Runnable {
 		zhenL = new ImageIcon("image/zhenL.png");
 		random = new Random();
 		setIcon(zhenL);
-		this.setSize(50, 50);
-		this.setLocation(x, y);
 		this.stage1 = stage1;
-		Thread move = new Thread(this);
-		move.start();
+		this.setSize(50, 50);
+		this.setLocation(480, 178);
+
 		Thread jth = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				try {
-					while(true) {
+					while (true) {
 						Thread.sleep(3000);
 						jump = true;
 					}
@@ -43,15 +44,12 @@ public class Zhen extends JLabel implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 		jth.start();
 	}
-	
-	
-	
-	
+
 	public void timeout() {
 
 	}
@@ -59,7 +57,7 @@ public class Zhen extends JLabel implements Runnable {
 	public void held() {
 //		this.setIcon("°¤Èù ¾ÆÀÌÄÜ")
 	}
-	
+
 	public void left() {
 		if (stage1.cal.ZdownCheck(this)) {
 			this.setY(this.getY() + 2);
@@ -68,7 +66,7 @@ public class Zhen extends JLabel implements Runnable {
 		}
 		this.setLocation(this.getX(), this.getY());
 	}
-	
+
 	public void right() {
 		if (stage1.cal.ZdownCheck(this)) {
 			this.setY(this.getY() + 2);
@@ -77,41 +75,51 @@ public class Zhen extends JLabel implements Runnable {
 		}
 		this.setLocation(this.getX(), this.getY());
 	}
-	
-	public void leftJump() {
-		for (int i = 0; i < 40; i++) {
-			this.setX(this.getX() - 1);
-			this.setY(this.getY() - 3);
-			this.setLocation(this.getX(), this.getY());
-			try {
-				Thread.sleep(15);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 
-		for (int i = 0; i < 40; i++) {
-			this.setX(this.getX() - 1);
-			this.setY(this.getY() + 3);
-			this.setLocation(this.getX(), this.getY());
-			try {
-				Thread.sleep(15);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public void leftJump() {
+
+		for (int i = 0; i < 44; i++) {
+			if(isBubbed == false) {
+				this.setX(this.getX() - 1);
+				this.setY(this.getY() - 3);
+				this.setLocation(this.getX(), this.getY());
+				try {
+					Thread.sleep(15);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
+		}
+
+		for (int i = 0; i < 44; i++) {
+			if(isBubbed == false) {
+				this.setX(this.getX() - 1);
+				this.setY(this.getY() + 3);
+				this.setLocation(this.getX(), this.getY());
+				if(this.getY() >= 414 && this.getY() <= 416) {
+					this.setY(415);
+					jump = false;
+					return;
+				}
+				try {
+					Thread.sleep(15);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 		}
 		jump = false;
 	}
-	
+
 	public void rightJump() {
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 44; i++) {
 			this.setX(this.getX() + 1);
 			this.setY(this.getY() - 3);
 			this.setLocation(this.getX(), this.getY());
-			repaint();
 			try {
 				Thread.sleep(15);
 			} catch (InterruptedException e) {
@@ -120,11 +128,15 @@ public class Zhen extends JLabel implements Runnable {
 			}
 		}
 
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 44; i++) {
 			this.setX(this.getX() + 1);
 			this.setY(this.getY() + 3);
 			this.setLocation(this.getX(), this.getY());
-			repaint();
+			if(this.getY() >= 414 && this.getY() <= 416) {
+				this.setY(415);
+				jump = false;
+				return;
+			}
 			try {
 				Thread.sleep(15);
 			} catch (InterruptedException e) {
@@ -136,38 +148,45 @@ public class Zhen extends JLabel implements Runnable {
 	}
 
 	public void run() {
-		while (true) {
+		while (isBubbed == false) {
 			try {
 				if (random.nextInt(2) == 0) {
-					while (stage1.cal.ZwallCheck(this) != 1) {
+					this.setIcon(zhenL);
+					while (stage1.cal.ZwallCheck(this) != 1 && isBubbed == false) {
 						left();
-						Thread.sleep(2);
-						if(jump && stage1.cal.ZdownCheck(this) == false) {
+						if (jump && stage1.cal.ZdownCheck(this) == false) {
 							leftJump();
 						}
-					}
-					while (stage1.cal.ZwallCheck(this) != 2) {
-						right();
 						Thread.sleep(2);
-						if(jump && stage1.cal.ZdownCheck(this) == false) {
+
+					}
+					this.setIcon(zhenR);
+					while (stage1.cal.ZwallCheck(this) != 2 && isBubbed == false) {
+						right();
+						if (jump && stage1.cal.ZdownCheck(this) == false) {
 							rightJump();
 						}
+						Thread.sleep(2);
+
 					}
 				} else {
-					while (stage1.cal.ZwallCheck(this) != 2) {
+					this.setIcon(zhenR);
+					while (stage1.cal.ZwallCheck(this) != 2 && isBubbed == false) {
 						right();
-						Thread.sleep(2);
-						if(jump && stage1.cal.ZdownCheck(this) == false) {
+						if (jump && stage1.cal.ZdownCheck(this) == false) {
 							rightJump();
 						}
-						
-					}
-					while (stage1.cal.ZwallCheck(this) != 1) {
-						left();
 						Thread.sleep(2);
-						if(jump && stage1.cal.ZdownCheck(this) == false) {
+
+					}
+					this.setIcon(zhenL);
+					while (stage1.cal.ZwallCheck(this) != 1 && isBubbed == false) {
+						left();
+						if (jump && stage1.cal.ZdownCheck(this) == false) {
 							leftJump();
 						}
+						Thread.sleep(2);
+
 					}
 				}
 

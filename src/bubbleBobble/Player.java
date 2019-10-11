@@ -16,6 +16,7 @@ public class Player extends JLabel implements Runnable {
 	Boolean right = false;
 	Boolean up = false;
 	Boolean down = false;
+	Boolean col = false;
 
 	ImageIcon playerR; // 오른쪽 이미지
 	ImageIcon playerL; // 왼쪽 이미지
@@ -26,6 +27,7 @@ public class Player extends JLabel implements Runnable {
 		setIcon(playerR);
 		this.setSize(50, 50);
 		this.setLocation(x, y);
+
 		move();
 
 	}
@@ -34,9 +36,17 @@ public class Player extends JLabel implements Runnable {
 		Thread th = new Thread(this);
 		th.start();
 	}
-
-	public void dead() {
-		remove(this);
+	public void attack(Zhen zhen, Stage1 stage1) {
+		if(zhen.isBubbed) {
+			stage1.remove(zhen);
+			stage1.repaint();
+		} else {
+			dead(stage1);
+			stage1.repaint();
+		}
+	}
+	public void dead(Stage1 stage1) {
+		stage1.remove(this);
 	}
 
 	public int getDirect() {
@@ -69,28 +79,29 @@ public class Player extends JLabel implements Runnable {
 			while (this.left) {
 				try {
 					if (this.left && this.up) {
-						for (int i = 0; i < 40; i++) {
+						for (int i = 0; i < 44; i++) {
 							this.setX(this.getX() - 1);
 							this.setY(this.getY() - 3);
 							this.setLocation(this.getX(), this.getY());
-							repaint();
 							Thread.sleep(15);
 						}
+						this.up = false;
+						this.down = true;
 
-						for (int i = 0; i < 40; i++) {
-							this.setX(this.getX() - 1);
-							this.setY(this.getY() + 3);
-							this.setLocation(this.getX(), this.getY());
-							repaint();
-							Thread.sleep(15);
+						for (int i = 0; i < 44; i++) {
+							if(this.down) {
+								this.setX(this.getX() - 1);
+								this.setY(this.getY() + 3);
+								this.setLocation(this.getX(), this.getY());
+								Thread.sleep(15);
+							}
+							
 						}
 
 					}
-//					wallCheck();
 					this.setIcon(this.playerL);
 					this.setX(this.getX() - 1);
 					this.setLocation(this.getX(), this.getY());
-					repaint();
 
 					Thread.sleep(5);
 
@@ -101,20 +112,24 @@ public class Player extends JLabel implements Runnable {
 			while (this.right) {
 				try {
 					if (this.right && this.up) {
-						for (int i = 0; i < 40; i++) {
+						for (int i = 0; i < 44; i++) {
 							this.setX(this.getX() + 1);
 							this.setY(this.getY() - 3);
 							this.setLocation(this.getX(), this.getY());
 							repaint();
 							Thread.sleep(15);
 						}
+						this.up = false;
+						this.down = true;
 
-						for (int i = 0; i < 40; i++) {
-							this.setX(this.getX() + 1);
-							this.setY(this.getY() + 3);
-							this.setLocation(this.getX(), this.getY());
-							repaint();
-							Thread.sleep(15);
+						for (int i = 0; i < 44; i++) {
+							if(this.down) {
+								this.setX(this.getX() + 1);
+								this.setY(this.getY() + 3);
+								this.setLocation(this.getX(), this.getY());
+								Thread.sleep(15);
+							}
+							
 						}
 
 					}
@@ -134,7 +149,6 @@ public class Player extends JLabel implements Runnable {
 					try {
 						this.setY(this.getY() - 1);
 						this.setLocation(this.getX(), this.getY());
-						repaint();
 						Thread.sleep(5);
 						
 					} catch (InterruptedException e1) {
@@ -144,43 +158,44 @@ public class Player extends JLabel implements Runnable {
 				this.up = false;
 				this.down = true;
 				// 상승 끝 하강 시작
-				while (this.down) {
-					while (this.down && this.left) {
-						try {
-//							stopCheck(this);
-							this.setIcon(this.playerL);
-							this.setX(this.getX() - 1);
-							this.setY(this.getY() + 3);
-							this.setLocation(this.getX(), this.getY());
-//							repaint();
-							Thread.sleep(15);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					while (this.down && this.right) {
-						try {
+				
+
+			}
+			while (this.down) {
+				while (this.down && this.left) {
+					try {
 //						stopCheck(this);
-							this.setIcon(this.playerR);
-							this.setX(this.getX() + 1);
-							this.setY(this.getY() + 3);
-							this.setLocation(this.getX(), this.getY());
+						this.setIcon(this.playerL);
+						this.setX(this.getX() - 1);
+						this.setY(this.getY() + 3);
+						this.setLocation(this.getX(), this.getY());
 //						repaint();
-							Thread.sleep(15);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						Thread.sleep(15);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
+				}
+				while (this.down && this.right) {
 					try {
 //					stopCheck(this);
-						this.setY(this.getY() + 1);
+						this.setIcon(this.playerR);
+						this.setX(this.getX() + 1);
+						this.setY(this.getY() + 3);
 						this.setLocation(this.getX(), this.getY());
 //					repaint();
-						Thread.sleep(5);
+						Thread.sleep(15);
 					} catch (Exception e) {
-						// TODO: handle exception
+						e.printStackTrace();
 					}
-
+				}
+				try {
+//				stopCheck(this);
+					this.setY(this.getY() + 1);
+					this.setLocation(this.getX(), this.getY());
+//				repaint();
+					Thread.sleep(5);
+				} catch (Exception e) {
+					// TODO: handle exception
 				}
 
 			}
