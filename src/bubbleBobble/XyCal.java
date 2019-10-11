@@ -77,10 +77,10 @@ public class XyCal {
 	public int PfloorCheck() {
 
 		// ±¸¸Û
-		if (player.getX() >= 110 && player.getX() <= 170 && player.getY() <= 415) {
+		if (player.getX() >= 110 && player.getX() <= 170 && player.getY() <= 420) {
 			return 2;
 		}
-		if (player.getX() >= 780 && player.getX() <= 830 && player.getY() <= 415) {
+		if (player.getX() >= 780 && player.getX() <= 830 && player.getY() <= 420) {
 			return 2;
 		}
 		// 2Ãþ
@@ -113,15 +113,19 @@ public class XyCal {
 	}
 
 	public Boolean bubbleNZhen(Bubble bubble, Stage1 stage1) {
-		for (int i = 0; i < zhen.length; i++) {
-			if (bubble.getX() >= zhen[i].getX() && bubble.getX() <= zhen[i].getX() + 50
-					&& bubble.getY() > zhen[i].getY() - 50 && bubble.getY() < zhen[i].getY() + 50
-					&& zhen[i].isBubbed == false) {
-				stage1.remove(bubble);
-				stage1.repaint();
-				bubble.hold(zhen[i]);
-				return true;
+		try {
+			for (int i = 0; i < zhen.length; i++) {
+				if (bubble.getX() >= zhen[i].getX() && bubble.getX() <= zhen[i].getX() + 50
+						&& bubble.getY() > zhen[i].getY() - 50 && bubble.getY() < zhen[i].getY() + 50
+						&& zhen[i].isBubbed == false) {
+					stage1.remove(bubble);
+					stage1.repaint();
+					bubble.hold(zhen[i]);
+					return true;
+				}
 			}
+		} catch (Exception e) {
+			return false;
 		}
 		return false;
 	}

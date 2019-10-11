@@ -26,7 +26,6 @@ public class Bubble extends JLabel{
 	}
 	
 	public void hold(Zhen zhen) {
-		zhen.setIcon(bubbled);
 		zhen.isBubbed = true;
 		moveBubble(zhen);
 	}
@@ -34,6 +33,7 @@ public class Bubble extends JLabel{
 	public void moveBubble(Zhen zhen) {
 		try {
 			for (int i = 0; i < 400; i++) {
+				zhen.setIcon(bubbled);
 				zhen.setY(zhen.getY() - 1);
 				zhen.setLocation(zhen.getX(), zhen.getY());
 				Thread.sleep(10);

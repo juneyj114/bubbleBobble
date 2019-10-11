@@ -17,6 +17,8 @@ public class Stage1 extends JFrame {
 	XyCal cal;
 	Thread wall;
 	Thread pfloor;
+	long time1 = 0;
+	long time2 = 0;
 
 	// 배경그리기
 	public void draw_bg() {
@@ -26,7 +28,6 @@ public class Stage1 extends JFrame {
 
 	// 버블그리기
 	public void draw_bubble() {
-
 		if (player.getDirect() == 2) {
 			Bubble bubble = new Bubble(player.getX() + 50, player.getY());
 			new Thread(() -> {
@@ -52,10 +53,8 @@ public class Stage1 extends JFrame {
 		} else {
 			Bubble bubble = new Bubble(player.getX() - 50, player.getY());
 			new Thread(() -> {
-
 				try {
 					add(bubble);
-
 					for (int i = 0; i < 100; i++) {
 						cal.bubbleNZhen(bubble, this);
 						bubble.setLocation(bubble.getX(), bubble.getY());
@@ -70,11 +69,9 @@ public class Stage1 extends JFrame {
 					}
 					remove(bubble);
 					repaint();
-
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-
 			}).start();
 		}
 
@@ -82,7 +79,7 @@ public class Stage1 extends JFrame {
 
 	// 몹 그리기
 	public void draw_zhen() {
-		new Thread(()-> {
+		new Thread(() -> {
 			try {
 				for (int i = 0; i < zhen.length; i++) {
 					zhen[i] = new Zhen(this);
@@ -94,7 +91,7 @@ public class Stage1 extends JFrame {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}).start();  
+		}).start();
 
 	}
 
@@ -144,12 +141,12 @@ public class Stage1 extends JFrame {
 
 			@Override
 			public void run() {
-				while(true) {
+				while (true) {
 					try {
-						if(cal.playerNZhen(stage1)) {
-							
+						if (cal.playerNZhen(stage1)) {
+
 						}
-						Thread.sleep(5);
+						Thread.sleep(1);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -157,7 +154,7 @@ public class Stage1 extends JFrame {
 				}
 			}
 		});
-		System.out.println("55");
+
 		wall.start();
 		pfloor.start();
 		th.start();
@@ -197,7 +194,12 @@ public class Stage1 extends JFrame {
 					player.right = true;
 					break;
 				case KeyEvent.VK_SPACE:
-					draw_bubble();
+					time1 = System.currentTimeMillis();
+					if(time1 - time2 >= 500) {
+						draw_bubble();
+						time2 = System.currentTimeMillis();
+					}
+					
 				}
 			}
 
