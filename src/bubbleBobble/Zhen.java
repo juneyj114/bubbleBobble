@@ -22,6 +22,14 @@ public class Zhen extends JLabel implements Runnable {
 	ImageIcon zhenR; // 오른쪽 이미지
 	ImageIcon zhenL; // 왼쪽 이미지
 
+	public Zhen() {
+		zhenR = new ImageIcon("image/zhenR.png");
+		zhenL = new ImageIcon("image/zhenL.png");
+		setIcon(zhenL);
+		this.setSize(50, 50);
+		this.setLocation(480, 178);
+	}
+	
 	public Zhen(Stage1 stage1) {
 		zhenR = new ImageIcon("image/zhenR.png");
 		zhenL = new ImageIcon("image/zhenL.png");
